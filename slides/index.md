@@ -296,7 +296,7 @@ You can also add it multiple times
 
 ---
 
-### Todo widget
+### A bit more complex: Todo widget
 ![Todo widget](./images/todo-widget.png)
 
 ---
@@ -390,10 +390,10 @@ methods: {
 
 #### Step 2: State Management
 
-1. Tell the dashboard API that we will use a store
+1. Tell the dashboard API that we will use a Vuex store
 2. Implement the store actions, getters, mutations
-  - Actions: `fetchTodos`, `createTodo`, `removeTodo`, `updateTodo`
-  - Getters: `getTodos` returns array of todos in the right order
+  - **Actions**: `fetchTodos`, `createTodo`, `removeTodo`, `updateTodo`
+  - **Getters**: `getTodos` returns array of todos in the right order
 3. Initial state is `{}`, we will use a hash with `_id` as key
 4. Vue provides API to ensure better reactivity: `Vue.set`, `Vue.delete`, etc...
 
@@ -437,7 +437,7 @@ export default {
 
 ---
 
-#### Update component to load from store
+#### Update component to load from store and bind todos
 
 ```js
 computed: {
