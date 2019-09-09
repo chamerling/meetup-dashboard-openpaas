@@ -98,7 +98,7 @@ export default {
 
 ---
 
-Widgets are following the `Widget Component API`:
+Widgets must follow the `Widget Component API`
 
 ``` js
 {
@@ -113,21 +113,21 @@ Widgets are following the `Widget Component API`:
 }
 ```
 
----
+----
 
 ### `type`
 
 - The widget type as `String`
 - This MUST be unique among all widgets
 
----
+----
 
 ### `title`
 
 - The widget title as `String`
 - Used as display name in the widget store
 
----
+----
 
 ### `icon`
 
@@ -135,27 +135,27 @@ Widgets are following the `Widget Component API`:
 - Possible values are icon names from [material.io icons](https://material.io/resources/icons/)
 - Used in the widget store
 
----
+----
 
 ### `description`
 
 - The widget description as `String`
 - Used to display a short description of the widget in the widget store
 
----
+----
 
 ### `categories`
 
 - An array of String
 - Categories are used in the store to filter and find widgets.
 
----
+----
 
 ### `store`
 
 A [vuex store module](https://vuex.vuejs.org/guide/modules.html) which is defined to be used by the widget only
 
----
+----
 
 ### `components`
 
@@ -172,7 +172,7 @@ A [vuex store module](https://vuex.vuejs.org/guide/modules.html) which is define
 }
 ```
 
----
+----
 
 ### Settings `component`
 
@@ -186,7 +186,7 @@ A [vuex store module](https://vuex.vuejs.org/guide/modules.html) which is define
 }
 ```
 
----
+----
 
 ### `hooks`
 
@@ -199,7 +199,7 @@ onRemove: store => {
 }
 ```
 
----
+----
 
 ### `settings`
 
@@ -210,7 +210,7 @@ onRemove: store => {
 
 ---
 
-## Creating a new widget
+## Let's code!
 
 ---
 
@@ -330,7 +330,7 @@ You can also add it multiple times
       <v-list-tile-sub-title>{{ todo.created_at | moment("from") }}</v-list-tile-sub-title>
     </v-list-tile-content>
     <v-list-tile-action>
-      <v-btn icon ripple @click="remove">
+      <v-btn icon ripple @click="remove(todo._id)">
         <v-icon color="grey lighten-1">clear</v-icon>
       </v-btn>
     </v-list-tile-action>
@@ -346,14 +346,14 @@ export default {
     todos: []
   }),
   methods: {
-    remove() {
-      console.log("Remove");
+    remove(id) {
+      console.log("Remove", id);
     }
   }
   mounted() {
     this.todos = [
-      { title: "Buy 🍺", created_at: Date.now(), done: false, _id: 1 },
-      { title: "Adopt a 🦊", created_at: Date.now(), done: true, _id: 2 },
+      { _id: 1, title: "Buy 🍺", created_at: Date.now(), done: false},
+      { _id: 2, title: "Adopt a 🦊", created_at: Date.now(), done: true },
     ];
   }
 }
@@ -545,6 +545,8 @@ export default class TodoClient {
 
 ---
 
+#### Update store actions
+
 ```js
 const actions = {
   fetchTodos: ({ commit }) => {
@@ -563,6 +565,10 @@ const actions = {
   }
 };
 ```
+
+---
+
+ <iframe width="853" height="480" src="https://www.youtube.com/embed/CGLM8EXXALE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 
