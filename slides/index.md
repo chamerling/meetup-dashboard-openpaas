@@ -1,10 +1,10 @@
 # OpenPaaS Dashboard
-## Live coding a new widget
+### Live coding a new widget with Vue.JS
 ---
 
-- Overview
-- Widget API
-- Creating a new widget
+1. Overview
+2. Widget API
+3. Creating a new widget
 
 ---
 
@@ -55,7 +55,7 @@
 
 - [VueJS](https://vuejs.org) as the frontend framework
 - [Muuri](https://haltu.github.io/muuri/): Responsive, sortable, filterable and draggable grid layouts
-- [Vuetify 1.5.x](https://v15.vuetifyjs.com/en/components/buttons) as the Material UI library
+- [Vuetify 1.5.x](https://v15.vuetifyjs.com/en/) as the Material UI library
 - [OpenPaaS Platform](https://open-paas.org): Identity, social APIS, etc...
 
 ---
@@ -64,7 +64,7 @@
 
 ---
 
-`vue-dashboard` ~~is~~ will be a Vue plugin which allows to add dashboards to your Vue application 'without' effort:
+`vue-dashboard` ~~is~~ will be a Vue plugin (**adds global-level functionality to Vue**) which allows to add dashboards to your Vue application 'without' effort:
 
 ```js
 import VueDashboard from "vue-dashboard";
@@ -132,7 +132,7 @@ Widgets are following the `Widget Component API`:
 ### `icon`
 
 - The widget icon as `String`
-- Possible values are icon names from material icon module
+- Possible values are icon names from [material.io icons](https://material.io/resources/icons/)
 - Used in the widget store
 
 ---
@@ -146,7 +146,8 @@ Widgets are following the `Widget Component API`:
 
 ### `categories`
 
-- An array of String. Categories are used in the store to filter and find widgets.
+- An array of String
+- Categories are used in the store to filter and find widgets.
 
 ---
 
@@ -170,6 +171,11 @@ A [vuex store module](https://vuex.vuejs.org/guide/modules.html) which is define
   }
 }
 ```
+
+---
+
+### Settings `component`
+
 - `settings` component (**optional**) is the one used to display the widget settings.
 
 ```js
