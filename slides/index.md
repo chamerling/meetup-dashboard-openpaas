@@ -14,40 +14,10 @@
 
 ---
 
-- The OpenPaaS Dashboard is a [VueJS](https://vuejs.org)-based application which provides a set of pages composed of widgets
-- A widget is an independant UI "block", can act as an independant application <!-- .element: class="fragment" -->
-- The user can add as many widgets as he wants to its pages from a "widget store" <!-- .element: class="fragment" -->
-- Widgets can be ordered with drag and drop <!-- .element: class="fragment" -->
-
----
-
-### Widgets are avaible in a "Store"
-
-![Store Overview](./images/store-overview.png)
-
----
-
-## Available widgets 1/2
-
-- OpenPaaS Calendar
-- Clock
-- OpenPaaS Contact
-- Cryptocurrency
-- OpenPaaS Email
-- Github
-- Hackernews
-
----
-
-## Available widgets 2/2
-
-- OpenPaaS Member
-- Google News
-- OpenPaaS Application List
-- RSS Reader
-- Tuleap Projects
-- Twitter mentions
-- Weather
+1. The OpenPaaS Dashboard is a [VueJS](https://vuejs.org)-based application which provides a set of pages composed of widgets
+2. A widget is an independant UI component <!-- .element: class="fragment" -->
+3. The user can add as many widgets as he wants to his pages from a "widget store" <!-- .element: class="fragment" -->
+4. Widgets can be ordered with drag and drop <!-- .element: class="fragment" -->
 
 ---
 
@@ -60,11 +30,43 @@
 
 ---
 
+### Widgets are avaible in a "Store"
+
+![Store Overview](./images/store-overview.png)
+
+----
+
+## Available widgets 1/2
+
+- OpenPaaS Email
+- OpenPaaS Calendar
+- OpenPaaS Contact
+- OpenPaaS Member
+- OpenPaaS Application List
+- Github
+- Hackernews
+
+----
+
+## Available widgets 2/2
+
+- Clock
+- Cryptocurrency
+- Google News
+- RSS Reader
+- Tuleap Projects
+- Twitter mentions
+- Weather
+
+---
+
 ## Widget API
 
 ---
 
-`vue-dashboard` ~~is~~ will be a Vue plugin (**adds global-level functionality to Vue**) which allows to add dashboards to your Vue application 'without' effort:
+### Import & Tell Vue
+
+`vue-dashboard` ~~is~~ will be a Vue plugin (**adds global-level functionality to Vue**) which allows to add dashboards to your Vue application 'without' effort.
 
 ```js
 import VueDashboard from "vue-dashboard";
@@ -77,7 +79,7 @@ Vue.use(VueDashboard, {
 
 ---
 
-You can then build Vue component using the dashboard:
+### Use component
 
 ```html
 <template>
@@ -101,15 +103,16 @@ export default {
 Widgets must follow the `Widget Component API`
 
 ``` js
-{
-  type,
-  title,
-  icon,
-  description,
-  categories,
-  store,
-  components,
-  hooks
+export default {
+  type,        // String, unique
+  title,       // String
+  icon,        // String
+  description, // String
+  categories,  // [String]
+  store,       // Vuex module
+  components,  // Main & Settings Vue components
+  hooks,       // lifecycle functions
+  settings     // Map
 }
 ```
 
@@ -212,8 +215,6 @@ onRemove: store => {
 
 ## Let's code!
 
----
-
 1. Follow the `Widget API`
 2. Follow a simple file structure: Widgets are automatically "instanciated" at startup
 
@@ -261,18 +262,15 @@ export default {
 ```js
 import HelloWorld from "./HelloWorld.vue";
 
-const components = {
-  main: { component: HelloWorld, color: "purple" }
-};
-
 export default {
   type: "openpaas.dashboard.helloword",
   title: "My HelloWorld Component",
   icon: "access_time",
   categories: ["hello"],
   description: "This is my most famous component",
-  components,
-  settings
+  components: {
+    main: { component: HelloWorld, color: "purple" }
+  }
 };
 ```
 
@@ -284,11 +282,9 @@ The new widget is then available in the widget store, you can add it to any dash
 
 ---
 
-Once added
-
 ![Hello Dashboard](./images/hello-dashboard-1.png)
 
----
+----
 
 You can also add it multiple times
 
@@ -296,7 +292,8 @@ You can also add it multiple times
 
 ---
 
-### A bit more complex: Todo widget
+### A bit "more complex": Todo widget
+
 ![Todo widget](./images/todo-widget.png)
 
 ---
@@ -321,7 +318,7 @@ You can also add it multiple times
 
 ```html
  <v-list two-line dense>
-  <v-list-tile v-for="todo in todos" :key="todo._id">
+  <v-list-tile v-for="(todo, index) in todos" :key="todo._id">
     <v-list-tile-action>
       <v-checkbox v-model="todo.done"></v-checkbox>
     </v-list-tile-action>
@@ -330,7 +327,7 @@ You can also add it multiple times
       <v-list-tile-sub-title>{{ todo.created_at | moment("from") }}</v-list-tile-sub-title>
     </v-list-tile-content>
     <v-list-tile-action>
-      <v-btn icon ripple @click="remove(todo._id)">
+      <v-btn icon ripple @click="remove(index)">
         <v-icon color="grey lighten-1">clear</v-icon>
       </v-btn>
     </v-list-tile-action>
@@ -346,8 +343,9 @@ export default {
     todos: []
   }),
   methods: {
-    remove(id) {
-      console.log("Remove", id);
+    remove(index) {
+      console.log("Remove", index);
+      this.todos.splice(index, 1);
     }
   }
   mounted() {
@@ -385,6 +383,24 @@ methods: {
   // ...
 }
 ```
+
+---
+
+#### Step 2: State Management with Vuex
+
+**Vuex** is a state management pattern + library for Vue.js applications. It serves as a centralized store for all the components in an application, with rules ensuring that the state can only be mutated in a **predictable fashion**.
+
+---
+
+#### State Management Pattern
+
+- The **state**, the source of truth that drives our app
+- The **view**, a declarative mapping of the state
+- The **actions**, the possible ways the state could change in reaction to user inputs from the view
+
+This is an simple representation of the concept of "one-way data flow":
+
+![Vuex](./images/vuex.png)
 
 ---
 
@@ -452,8 +468,11 @@ mounted() {
 
 ---
 
+#### Caveats
+
 Vue does not like when we mutate Vuex objects without using Vuex: WE NEED TO REFACTOR!
 
+Solution:
 - `todo.done` must be a computed property
 - Create a dumb component to display a single todo
   - takes props as input (todo object)
@@ -487,7 +506,7 @@ computed: {
 
 ---
 
-Main component can now instanciate as many Todo.vue components as there are todos
+Pass props, listen to events:
 
 ```html
 <!-- Main.vue -->
@@ -505,9 +524,10 @@ Main component can now instanciate as many Todo.vue components as there are todo
 
 ---
 
-#### Step 3: API
+#### Step 3: Call HTTP API
 
-1. There is a `/todos` CRUD endpoint in OpenPaaS
+0. I created a todo module in OpenPaaS
+1. `/todos` CRUD endpoint in OpenPaaS
   - `PUT /todos`
   - `GET /todos`
   - `PATCH /todos/:id`
@@ -549,8 +569,8 @@ export default class TodoClient {
 
 ```js
 const actions = {
-  fetchTodos: ({ commit }) => {
-    const client = new TodoClient(rootState.applicationConfiguration.baseUrl, rootState.session.jwtToken, rootState.user.user._id);
+  fetchTodos: ({ commit, rootState }) => {
+    const client = new TodoClient(rootState.applicationConfiguration.baseUrl, rootState.session.jwtToken);
 
     return client.getTodos()
       .then(todos => todos || [])
